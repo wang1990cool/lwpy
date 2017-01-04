@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="lwpymysql:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="lwpy.war">
+      <element id="artifact" artifact-name="lwpymysql:war exploded" />
+    </root>
+  </artifact>
+</component>
