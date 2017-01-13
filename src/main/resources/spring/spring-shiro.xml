@@ -1,51 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
-		http://www.springframework.org/schema/mvc 
-		http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
-		http://www.springframework.org/schema/context 
-		http://www.springframework.org/schema/context/spring-context-4.2.xsd
-		http://www.springframework.org/schema/aop 
-		http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
-		http://www.springframework.org/schema/tx 
-		http://www.springframework.org/schema/tx/spring-tx-4.2.xsd " default-lazy-init="true">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="myShiro" class="im.dhc.common.filter.ShiroCheckRealm"></bean>
-	<!-- <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />-->      
-    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />   
-	 <!-- 配置权限管理器 -->  
-    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">    
-        <!-- ref对应我们写的realm  MyShiro -->  
-        <property name="realm" ref="myShiro"/>      
-    </bean>  
-      
-    <!-- 配置shiro的过滤器工厂类，id- shiroFilter要和我们在web.xml中配置的过滤器一致 -->  
-    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">   
-        <!-- 调用我们配置的权限管理器 -->   
-        <property name="securityManager" ref="securityManager"/>   
-        <!-- 配置我们的登录请求地址 -->   
-        <property name="loginUrl" value="/financemanage/system/login/login.jsp"/>
-        <!-- 配置我们在登录页登录成功后的跳转地址，如果你访问的是非/login地址，则跳到您访问的地址 -->  
-        <!--<property name="successUrl" value="/user"/>-->     
-        <!-- 如果您请求的资源不再您的权限范围，则跳转到/403请求地址 -->  
-        <property name="unauthorizedUrl" value="/financemanage/system/login/loginSessionTimeOut.jsp"/>    
-        <!-- 权限配置 -->
+    <description>apache shiro配置</description>
+
+
+    <!-- 安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realms">
+        <list>
+            <ref bean="securityRealm"/>
+        </list>
+        </property>
+        <!-- cacheManager,集合spring缓存工厂 -->
+        <!-- <property name="cacheManager" ref="shiroEhcacheManager" /> -->
+        <!-- <property name="sessionManager" ref="sessionManager" /> -->
+    </bean>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/page/login"/>
+        <property name="successUrl" value="/page/login"/>
+        <property name="unauthorizedUrl" value="/page/login"/>
         <property name="filterChainDefinitions">
-            <value>    
-                <!-- anon表示此地址不需要任何权限即可访问 -->  
-                /common/**=anon 
-                /automake/controller/system/login/SelectRoleNameController.do=anon 
-               	/automake/controller/system/login/LoginAction.do=anon 
-               	/message/**=anon
-                <!--所有的请求(除去配置的静态资源请求或请求地址为anon的请求)都要通过登录验证,如果未登录则跳到/login-->    
-                /automake/** = authc
-            </value>    
-        </property>    
-    </bean>  
-      
-      
-  
+            <value>
+                <!--&lt;!&ndash; 静态资源允许访问 &ndash;&gt;-->
+                /pages/** = anon
+                <!--/assets/** = anon-->
+                <!--&lt;!&ndash; 登录页允许访问 &ndash;&gt;-->
+                <!--/rest/user/login = anon-->
+                <!--&lt;!&ndash; 其他资源需要认证 &ndash;&gt;-->
+                <!--/** = authc-->
+            </value>
+        </property>
+    </bean>
+
+    <!-- 缓存管理器 使用Ehcache实现 -->
+    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:/common/ehcache-shiro.xml"/>
+    </bean>
+
+    <!-- 会话DAO -->
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO"/>
+
+    <!-- 会话管理器 -->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionDAO" ref="sessionDAO"/>
+    </bean>
+
+    <!-- Shiro生命周期处理器 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
 </beans>

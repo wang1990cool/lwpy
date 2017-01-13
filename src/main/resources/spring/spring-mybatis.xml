@@ -1,0 +1,26 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" p:dataSource-ref="dataSource"
+          p:configLocation="classpath:mybatis/mybatis-config.xml"
+          p:mapperLocations="classpath:mybatis/mapper/*.xml"/>
+
+    <!-- MyBatis begin -->
+
+    <!--<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">-->
+        <!--<constructor-arg  ref="sqlSessionFactory" />-->
+    <!--</bean>-->
+
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+        <!--<property name="basePackage" value="edu.ahut.web.dao"/>-->
+        <!--<property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate"/>-->
+    <!--</bean>-->
+    <!-- spring与mybatis整合配置，扫描所有dao -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" p:basePackage="edu.ahut.web.dao"
+          p:sqlSessionFactoryBeanName="sqlSessionFactory"/>
+
+</beans>

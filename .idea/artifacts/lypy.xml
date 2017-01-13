@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="lypy">
+    <output-path>$PROJECT_DIR$/out/artifacts/lypy</output-path>
+    <root id="archive" name="lypy.war" />
+  </artifact>
+</component>
