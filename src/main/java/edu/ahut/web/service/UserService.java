@@ -25,5 +25,7 @@ public interface UserService extends BaseService<User, Long> {
      * @param username
      * @return
      */
-//    User selectByUsername(String username);
+    User selectByUsername(String username);
+
+    User authentication(User user);
 }

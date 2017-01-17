@@ -23,6 +23,10 @@ public abstract  class AbstractService<T, ID extends Serializable> implements Ba
         return baseMapper.selectByPrimaryKey(id);
     }
     @Override
+    public T selectAll() {
+        return baseMapper.selectAll();
+    }
+    @Override
     public int updateByPrimaryKeySelective(T record) {
         return baseMapper.updateByPrimaryKey(record);
     }

@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
+
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 
 /**
  * 用户控制器
@@ -73,7 +76,7 @@ public class UserController {
         // 登出操作
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
-        return "login";
+        return "login/login";
     }
 
     /**
@@ -102,5 +105,15 @@ public class UserController {
         user.setUsername("wangcan");
         user.setPassword("12345");
         userService.insert(user);
+    }
+
+    @RequestMapping("/showInfos")
+     @ResponseBody
+    public List<User> showUserInfos(){
+        LOGGER.info("查询用户全部用户");
+
+
+        List<User> userInfos = (List<User>)userService.selectAll();
+        return userInfos;
     }
 }

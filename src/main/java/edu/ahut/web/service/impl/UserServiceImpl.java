@@ -28,4 +28,13 @@ public class UserServiceImpl extends AbstractService<User,Long> implements UserS
         return userMapper.insertSelective(model);
     }
 
+    @Override
+    public User selectByUsername(String username){
+        return userMapper.selectByUsername(username);
+    }
+
+    @Override
+    public User authentication(User user) {
+        return userMapper.authentication(user);
+    }
 }

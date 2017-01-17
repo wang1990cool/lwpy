@@ -84,4 +84,10 @@
         SELECT p.* FROM permission p LEFT JOIN role_permission rp ON rp.permission_id = p.id
         WHERE  rp.role_id = #{id,jdbcType=BIGINT}
     </select>
+
+    <select id="selectAll" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from permission
+    </select>
 </mapper>
